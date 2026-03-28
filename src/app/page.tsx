@@ -17,10 +17,18 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/learn/api/me', { credentials: 'include' })
+    fetch('/learn/api/users/me', { credentials: 'include' })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
-        if (data?.user) setUser(data.user)
+        if (data?.user) {
+          const u = data.user
+          setUser({
+            sub: String(u.id),
+            email: u.email,
+            tier: typeof u.tier === 'object' ? u.tier.accessLevel : u.tier ?? 'free',
+            role: u.role ?? 'user',
+          })
+        }
       })
       .catch(() => {})
       .finally(() => setLoading(false))
