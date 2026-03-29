@@ -7,6 +7,7 @@ import LearningProgressWidget from '@/components/widgets/LearningProgressWidget'
 import DailyProtocolWidget from '@/components/widgets/DailyProtocolWidget'
 import BiomarkerTrendsWidget from '@/components/widgets/BiomarkerTrendsWidget'
 import ActivityFeedWidget from '@/components/widgets/ActivityFeedWidget'
+import WearableConnectWidget from '@/components/widgets/WearableConnectWidget'
 
 interface UserData {
   sub: string
@@ -55,6 +56,7 @@ export default function DashboardView({ user }: { user: UserData }) {
           <LearningProgressWidget />
           <DailyProtocolWidget />
           <ActivityFeedWidget userId={user.sub} />
+          <WearableConnectWidget userId={user.sub} />
         </div>
 
         {/* Biomarker Trends — full width */}
