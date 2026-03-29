@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import LandingView from '@/components/LandingView'
+import LoginView from '@/components/LoginView'
+import RegisterView from '@/components/RegisterView'
 import DashboardView from '@/components/DashboardView'
 import LoadingSkeleton from '@/components/LoadingSkeleton'
 
@@ -12,9 +14,11 @@ interface UserData {
   role: string
 }
 
+type View = 'loading' | 'landing' | 'login' | 'register' | 'dashboard'
+
 export default function HomePage() {
   const [user, setUser] = useState<UserData | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [view, setView] = useState<View>('loading')
 
   useEffect(() => {
     fetch('/learn/api/users/me', { credentials: 'include' })
@@ -28,13 +32,22 @@ export default function HomePage() {
             tier: typeof u.tier === 'object' ? u.tier.accessLevel : u.tier ?? 'free',
             role: u.role ?? 'user',
           })
+          setView('dashboard')
+        } else {
+          setView('landing')
         }
       })
-      .catch(() => {})
-      .finally(() => setLoading(false))
+      .catch(() => setView('landing'))
   }, [])
 
-  if (loading) return <LoadingSkeleton />
-  if (!user) return <LandingView />
-  return <DashboardView user={user} />
+  const handleLogin = (userData: UserData) => {
+    setUser(userData)
+    setView('dashboard')
+  }
+
+  if (view === 'loading') return <LoadingSkeleton />
+  if (view === 'login') return <LoginView onLogin={handleLogin} onSwitchToRegister={() => setView('register')} />
+  if (view === 'register') return <RegisterView onLogin={handleLogin} onSwitchToLogin={() => setView('login')} />
+  if (view === 'dashboard' && user) return <DashboardView user={user} />
+  return <LandingView onLogin={() => setView('login')} onRegister={() => setView('register')} />
 }
