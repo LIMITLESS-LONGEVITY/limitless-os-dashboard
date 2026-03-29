@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import AppLauncherWidget from '@/components/widgets/AppLauncherWidget'
 import MembershipStatusWidget from '@/components/widgets/MembershipStatusWidget'
 import HealthWidget from '@/components/widgets/HealthWidget'
@@ -20,9 +21,9 @@ export default function DashboardView({ user }: { user: UserData }) {
       {/* Header */}
       <header className="border-b border-brand-glass-border">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <h1 className="font-display text-2xl font-semibold tracking-[0.12em] text-brand-gold">
+          <Link href="/" className="font-display text-2xl font-semibold tracking-[0.12em] text-brand-gold hover:text-brand-gold/80 transition-colors">
             LIMITLESS
-          </h1>
+          </Link>
           <div className="flex items-center gap-4">
             <span className="text-sm text-brand-silver hidden sm:inline">{user.email}</span>
             <span className="text-xs font-medium px-2 py-1 rounded-full bg-brand-gold-dim text-brand-gold capitalize">
