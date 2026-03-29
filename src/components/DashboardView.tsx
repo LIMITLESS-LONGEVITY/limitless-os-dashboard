@@ -4,6 +4,8 @@ import HealthWidget from '@/components/widgets/HealthWidget'
 import UpcomingEventsWidget from '@/components/widgets/UpcomingEventsWidget'
 import LearningProgressWidget from '@/components/widgets/LearningProgressWidget'
 import DailyProtocolWidget from '@/components/widgets/DailyProtocolWidget'
+import BiomarkerTrendsWidget from '@/components/widgets/BiomarkerTrendsWidget'
+import ActivityFeedWidget from '@/components/widgets/ActivityFeedWidget'
 
 interface UserData {
   sub: string
@@ -51,7 +53,11 @@ export default function DashboardView({ user }: { user: UserData }) {
           <UpcomingEventsWidget />
           <LearningProgressWidget />
           <DailyProtocolWidget />
+          <ActivityFeedWidget userId={user.sub} />
         </div>
+
+        {/* Biomarker Trends — full width */}
+        <BiomarkerTrendsWidget userId={user.sub} />
       </main>
     </div>
   )
