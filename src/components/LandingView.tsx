@@ -34,7 +34,13 @@ const apps = [
   },
 ]
 
-export default function LandingView() {
+export default function LandingView({
+  onLogin,
+  onRegister,
+}: {
+  onLogin: () => void
+  onRegister: () => void
+}) {
   return (
     <div className="min-h-screen bg-brand-dark flex flex-col">
       {/* Hero */}
@@ -52,18 +58,18 @@ export default function LandingView() {
 
         {/* Auth buttons */}
         <div className="flex gap-4">
-          <a
-            href="/learn/login?redirect=/"
+          <button
+            onClick={onLogin}
             className="px-8 py-3 rounded-lg border border-brand-gold text-brand-gold font-medium hover:bg-brand-gold-dim transition-colors"
           >
             Log In
-          </a>
-          <a
-            href="/learn/register?redirect=/"
+          </button>
+          <button
+            onClick={onRegister}
             className="px-8 py-3 rounded-lg bg-brand-gold text-brand-dark font-medium hover:bg-brand-gold/90 transition-colors"
           >
             Get Started
-          </a>
+          </button>
         </div>
       </header>
 
