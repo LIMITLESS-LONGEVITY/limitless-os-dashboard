@@ -102,7 +102,7 @@ export default function AppLauncherWidget({ userId }: { userId: string }) {
     {
       name: 'Health',
       description: 'Digital twin & biomarkers',
-      href: '/book/dashboard/health',
+      href: '/health',
       loading,
       status: healthLabel ?? '',
       icon: (
