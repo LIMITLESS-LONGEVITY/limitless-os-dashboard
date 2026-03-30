@@ -34,3 +34,27 @@ body {
   background-color: var(--limitless-dark);
   color: var(--limitless-light);
 }
+
+@keyframes greetingReveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.greeting-line {
+  opacity: 0;
+  animation: greetingReveal 400ms ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .greeting-line {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
+}
