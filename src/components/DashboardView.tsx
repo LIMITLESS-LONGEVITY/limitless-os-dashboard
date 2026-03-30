@@ -8,12 +8,14 @@ import DailyProtocolWidget from '@/components/widgets/DailyProtocolWidget'
 import BiomarkerTrendsWidget from '@/components/widgets/BiomarkerTrendsWidget'
 import ActivityFeedWidget from '@/components/widgets/ActivityFeedWidget'
 import WearableConnectWidget from '@/components/widgets/WearableConnectWidget'
+import GreetingBanner from '@/components/GreetingBanner'
 
 interface UserData {
   sub: string
   email: string
   tier: string
   role: string
+  firstName?: string
 }
 
 export default function DashboardView({ user }: { user: UserData }) {
@@ -35,15 +37,13 @@ export default function DashboardView({ user }: { user: UserData }) {
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-8 space-y-8">
-        {/* Welcome */}
-        <div>
-          <h2 className="text-2xl font-semibold text-brand-light">
-            Welcome back
-          </h2>
-          <p className="text-brand-silver/70 mt-1">
-            Your longevity dashboard at a glance.
-          </p>
-        </div>
+        {/* Greeting */}
+        <GreetingBanner
+          firstName={user.firstName}
+          email={user.email}
+          userId={user.sub}
+          tier={user.tier}
+        />
 
         {/* App Launcher — full width */}
         <AppLauncherWidget userId={user.sub} />

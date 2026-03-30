@@ -12,6 +12,7 @@ interface UserData {
   email: string
   tier: string
   role: string
+  firstName?: string
 }
 
 type View = 'loading' | 'landing' | 'login' | 'register' | 'dashboard'
@@ -31,6 +32,7 @@ export default function HomePage() {
             email: u.email,
             tier: typeof u.tier === 'object' ? u.tier.accessLevel : u.tier ?? 'free',
             role: u.role ?? 'user',
+            firstName: u.firstName || undefined,
           })
           setView('dashboard')
         } else {
