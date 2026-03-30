@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Header from '@/components/Header'
 import LandingView from '@/components/LandingView'
 import LoginView from '@/components/LoginView'
 import RegisterView from '@/components/RegisterView'
@@ -50,6 +51,16 @@ export default function HomePage() {
   if (view === 'loading') return <LoadingSkeleton />
   if (view === 'login') return <LoginView onLogin={handleLogin} onSwitchToRegister={() => setView('register')} />
   if (view === 'register') return <RegisterView onLogin={handleLogin} onSwitchToLogin={() => setView('login')} />
-  if (view === 'dashboard' && user) return <DashboardView user={user} />
-  return <LandingView onLogin={() => setView('login')} onRegister={() => setView('register')} />
+  if (view === 'dashboard' && user) return (
+    <>
+      <Header user={user} />
+      <DashboardView user={user} />
+    </>
+  )
+  return (
+    <>
+      <Header user={null} />
+      <LandingView onLogin={() => setView('login')} onRegister={() => setView('register')} />
+    </>
+  )
 }

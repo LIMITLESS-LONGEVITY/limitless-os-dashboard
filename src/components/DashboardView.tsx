@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import AppLauncherWidget from '@/components/widgets/AppLauncherWidget'
 import MembershipStatusWidget from '@/components/widgets/MembershipStatusWidget'
 import HealthWidget from '@/components/widgets/HealthWidget'
@@ -21,21 +20,6 @@ interface UserData {
 export default function DashboardView({ user }: { user: UserData }) {
   return (
     <div className="min-h-screen bg-brand-dark">
-      {/* Header */}
-      <header className="border-b border-brand-glass-border">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="font-display text-2xl font-semibold tracking-[0.12em] text-brand-gold hover:text-brand-gold/80 transition-colors">
-            LIMITLESS
-          </Link>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-brand-silver hidden sm:inline">{user.email}</span>
-            <span className="text-xs font-medium px-2 py-1 rounded-full bg-brand-gold-dim text-brand-gold capitalize">
-              {user.tier}
-            </span>
-          </div>
-        </div>
-      </header>
-
       <main className="max-w-6xl mx-auto px-6 py-8 space-y-8">
         {/* Greeting */}
         <GreetingBanner
