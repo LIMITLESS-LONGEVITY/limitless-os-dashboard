@@ -11,6 +11,7 @@ import DailyProtocolWidget from '@/components/widgets/DailyProtocolWidget'
 import BiomarkerTrendsWidget from '@/components/widgets/BiomarkerTrendsWidget'
 import ActivityFeedWidget from '@/components/widgets/ActivityFeedWidget'
 import WearableConnectWidget from '@/components/widgets/WearableConnectWidget'
+import CoachActivityWidget from '@/components/widgets/CoachActivityWidget'
 import GreetingBanner from '@/components/GreetingBanner'
 import FeedbackModal from '@/components/FeedbackModal'
 
@@ -48,6 +49,7 @@ export default function DashboardView({ user }: { user: UserData }) {
           <LearningProgressWidget />
           <DailyProtocolWidget />
           <ActivityFeedWidget userId={user.sub} />
+          <CoachActivityWidget userId={user.sub} />
           <WearableConnectWidget userId={user.sub} />
         </div>
 
