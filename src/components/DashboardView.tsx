@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from 'react'
 import AppLauncherWidget from '@/components/widgets/AppLauncherWidget'
 import MembershipStatusWidget from '@/components/widgets/MembershipStatusWidget'
 import HealthWidget from '@/components/widgets/HealthWidget'
@@ -8,6 +11,7 @@ import BiomarkerTrendsWidget from '@/components/widgets/BiomarkerTrendsWidget'
 import ActivityFeedWidget from '@/components/widgets/ActivityFeedWidget'
 import WearableConnectWidget from '@/components/widgets/WearableConnectWidget'
 import GreetingBanner from '@/components/GreetingBanner'
+import FeedbackModal from '@/components/FeedbackModal'
 
 interface UserData {
   sub: string
@@ -18,9 +22,11 @@ interface UserData {
 }
 
 export default function DashboardView({ user }: { user: UserData }) {
+  const [feedbackOpen, setFeedbackOpen] = useState(false)
+
   return (
-    <div className="min-h-screen bg-brand-dark">
-      <main className="max-w-6xl mx-auto px-6 py-8 space-y-8">
+    <div className="min-h-screen bg-brand-dark flex flex-col">
+      <main className="max-w-6xl mx-auto px-6 py-8 space-y-8 flex-1 w-full">
         {/* Greeting */}
         <GreetingBanner
           firstName={user.firstName}
@@ -46,6 +52,20 @@ export default function DashboardView({ user }: { user: UserData }) {
         {/* Biomarker Trends — full width */}
         <BiomarkerTrendsWidget userId={user.sub} />
       </main>
+
+      {/* Footer */}
+      <footer className="text-center py-8 text-brand-silver/40 text-sm border-t border-brand-glass-border">
+        <span>Limitless Longevity Consultancy</span>
+        <span className="mx-2">&middot;</span>
+        <button
+          onClick={() => setFeedbackOpen(true)}
+          className="text-brand-silver/40 hover:text-brand-gold transition-colors"
+        >
+          Share Feedback
+        </button>
+      </footer>
+
+      <FeedbackModal isOpen={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </div>
   )
 }
