@@ -12,6 +12,9 @@ import BiomarkerTrendsWidget from '@/components/widgets/BiomarkerTrendsWidget'
 import ActivityFeedWidget from '@/components/widgets/ActivityFeedWidget'
 import WearableConnectWidget from '@/components/widgets/WearableConnectWidget'
 import CoachActivityWidget from '@/components/widgets/CoachActivityWidget'
+import TodaysWorkoutWidget from '@/components/widgets/TodaysWorkoutWidget'
+import ActiveProgramsWidget from '@/components/widgets/ActiveProgramsWidget'
+import CubesAppCard from '@/components/widgets/CubesAppCard'
 import GreetingBanner from '@/components/GreetingBanner'
 import FeedbackModal from '@/components/FeedbackModal'
 
@@ -42,7 +45,9 @@ export default function DashboardView({ user }: { user: UserData }) {
 
         {/* Widget Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <TodaysWorkoutWidget userId={user.sub} />
           <LongevityScoreWidget userId={user.sub} />
+          <ActiveProgramsWidget userId={user.sub} />
           <HealthWidget userId={user.sub} />
           <MembershipStatusWidget />
           <UpcomingEventsWidget />
@@ -51,6 +56,7 @@ export default function DashboardView({ user }: { user: UserData }) {
           <ActivityFeedWidget userId={user.sub} />
           <CoachActivityWidget userId={user.sub} />
           <WearableConnectWidget userId={user.sub} />
+          <CubesAppCard userId={user.sub} />
         </div>
 
         {/* Biomarker Trends — full width */}
