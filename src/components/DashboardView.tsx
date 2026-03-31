@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import AppLauncherWidget from '@/components/widgets/AppLauncherWidget'
+import LongevityScoreWidget from '@/components/widgets/LongevityScoreWidget'
 import MembershipStatusWidget from '@/components/widgets/MembershipStatusWidget'
 import HealthWidget from '@/components/widgets/HealthWidget'
 import UpcomingEventsWidget from '@/components/widgets/UpcomingEventsWidget'
@@ -40,6 +41,7 @@ export default function DashboardView({ user }: { user: UserData }) {
 
         {/* Widget Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <LongevityScoreWidget userId={user.sub} />
           <HealthWidget userId={user.sub} />
           <MembershipStatusWidget />
           <UpcomingEventsWidget />
