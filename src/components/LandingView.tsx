@@ -1,3 +1,8 @@
+'use client'
+
+import { useState } from 'react'
+import FeedbackModal from '@/components/FeedbackModal'
+
 const apps = [
   {
     name: 'Learn',
@@ -41,6 +46,8 @@ export default function LandingView({
   onLogin: () => void
   onRegister: () => void
 }) {
+  const [feedbackOpen, setFeedbackOpen] = useState(false)
+
   return (
     <div className="min-h-screen bg-brand-dark flex flex-col">
       {/* Hero */}
@@ -108,8 +115,17 @@ export default function LandingView({
 
       {/* Footer */}
       <footer className="text-center py-8 text-brand-silver/40 text-sm border-t border-brand-glass-border">
-        Limitless Longevity Consultancy
+        <span>Limitless Longevity Consultancy</span>
+        <span className="mx-2">&middot;</span>
+        <button
+          onClick={() => setFeedbackOpen(true)}
+          className="text-brand-silver/40 hover:text-brand-gold transition-colors"
+        >
+          Share Feedback
+        </button>
       </footer>
+
+      <FeedbackModal isOpen={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </div>
   )
 }
