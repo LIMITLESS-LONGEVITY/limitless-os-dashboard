@@ -35,6 +35,27 @@ body {
   color: var(--limitless-light);
 }
 
+@theme {
+  --animate-slideUp: slideUp 300ms ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-slideUp {
+    animation: none !important;
+  }
+}
+
 @keyframes greetingReveal {
   from {
     opacity: 0;

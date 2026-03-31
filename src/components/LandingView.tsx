@@ -39,6 +39,8 @@ const apps = [
   },
 ]
 
+import { manageCookies } from '@/components/CookieConsent'
+
 export default function LandingView({
   onLogin,
   onRegister,
@@ -122,6 +124,13 @@ export default function LandingView({
           className="text-brand-silver/40 hover:text-brand-gold transition-colors"
         >
           Share Feedback
+        </button>
+        <span className="mx-2">&middot;</span>
+        <button
+          onClick={manageCookies}
+          className="text-brand-silver/40 hover:text-brand-gold motion-safe:transition-colors"
+        >
+          Manage Cookies
         </button>
       </footer>
 
