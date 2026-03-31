@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import CookieConsent from '@/components/CookieConsent'
 
 export const metadata: Metadata = {
   title: 'LIMITLESS OS',
@@ -26,6 +27,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased">
         {children}
+        <CookieConsent />
       </body>
     </html>
   )
