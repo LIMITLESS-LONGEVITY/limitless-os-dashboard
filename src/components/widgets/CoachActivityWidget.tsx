@@ -4,22 +4,24 @@ import { useEffect, useState } from 'react'
 import { fetchJson } from '@/lib/safe-fetch'
 
 interface CoachStats {
-  exercisesCreatedThisWeek: number
-  sessionsCreatedThisWeek: number
-  programsCreatedThisWeek: number
+  exercisesCreated: number
+  sessionsCreated: number
+  programsCreated: number
+  assignmentsGiven: number
   pendingAssignments: number
 }
 
-interface RecentSession {
+interface RecentContentItem {
   id: string
   name: string
+  status: string
+  durationSeconds: number
   createdAt: string
-  exerciseCount: number
 }
 
 interface CoachActivityData {
   stats: CoachStats
-  recentSessions: RecentSession[]
+  recentContent: RecentContentItem[]
 }
 
 function WidgetSkeleton() {
@@ -67,7 +69,7 @@ export default function CoachActivityWidget({ userId }: { userId: string }) {
   useEffect(() => {
     fetchJson<CoachActivityData>('/train/api/v1/me/coach/activity')
       .then((d) => {
-        if (d) {
+        if (d && d.stats && Array.isArray(d.recentContent)) {
           setData(d)
         } else {
           setIsCoach(false)
@@ -141,9 +143,9 @@ export default function CoachActivityWidget({ userId }: { userId: string }) {
         <div className="space-y-5">
           {/* Stats Row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <StatCard label="Exercises" value={data.stats.exercisesCreatedThisWeek} />
-            <StatCard label="Sessions" value={data.stats.sessionsCreatedThisWeek} />
-            <StatCard label="Programs" value={data.stats.programsCreatedThisWeek} />
+            <StatCard label="Exercises" value={data.stats.exercisesCreated} />
+            <StatCard label="Sessions" value={data.stats.sessionsCreated} />
+            <StatCard label="Programs" value={data.stats.programsCreated} />
             <StatCard
               label="Pending"
               value={data.stats.pendingAssignments}
@@ -151,21 +153,21 @@ export default function CoachActivityWidget({ userId }: { userId: string }) {
           </div>
 
           {/* Recent Sessions */}
-          {data.recentSessions.length > 0 && (
+          {data.recentContent.length > 0 && (
             <div className="border-t border-brand-glass-border pt-4">
-              <p className="text-xs text-brand-silver/50 mb-3">Recent Sessions</p>
+              <p className="text-xs text-brand-silver/50 mb-3">Recent Content</p>
               <ul className="space-y-2">
-                {data.recentSessions.slice(0, 5).map((session) => (
+                {data.recentContent.slice(0, 5).map((item) => (
                   <li
-                    key={session.id}
+                    key={item.id}
                     className="flex items-center justify-between text-sm"
                   >
                     <span className="text-brand-light truncate pr-3">
-                      {session.name}
+                      {item.name}
                     </span>
                     <span className="flex items-center gap-2 text-xs text-brand-silver/60 whitespace-nowrap">
-                      <span>{session.exerciseCount} ex.</span>
-                      <span>{formatDate(session.createdAt)}</span>
+                      <span>{Math.round(item.durationSeconds / 60)} min</span>
+                      <span>{formatDate(item.createdAt)}</span>
                     </span>
                   </li>
                 ))}

@@ -35,7 +35,11 @@ export default function HealthWidget({ userId }: { userId: string }) {
 
   useEffect(() => {
     fetchJson<HealthSummary>(`/api/twin/${userId}/summary`)
-      .then((d) => { if (d) setData(d) })
+      .then((d) => {
+        if (d && typeof d.biologicalAge === 'number' && Array.isArray(d.topBiomarkers)) {
+          setData(d)
+        }
+      })
       .finally(() => setLoading(false))
   }, [userId])
 
