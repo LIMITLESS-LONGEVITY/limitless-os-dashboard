@@ -105,7 +105,7 @@ export default function LongevityScoreWidget({ userId }: { userId: string }) {
   useEffect(() => {
     fetchJson<LongevityScoreData>(`/api/twin/${userId}/longevity-score/history?days=30`)
       .then((d) => {
-        if (d) setData(d)
+        if (d && typeof d.currentScore === 'number') setData(d)
       })
       .finally(() => setLoading(false))
   }, [userId])
@@ -195,7 +195,7 @@ export default function LongevityScoreWidget({ userId }: { userId: string }) {
           </div>
 
           {/* Component Bars */}
-          {data.components.length > 0 && (
+          {(data.components?.length ?? 0) > 0 && (
             <div className="space-y-3">
               {data.components.map((c) => (
                 <ComponentBar
@@ -209,7 +209,7 @@ export default function LongevityScoreWidget({ userId }: { userId: string }) {
           )}
 
           {/* Sparkline */}
-          {data.history.length >= 2 && (
+          {(data.history?.length ?? 0) >= 2 && (
             <div className="border-t border-brand-glass-border pt-3">
               <p className="text-xs text-brand-silver/50 mb-2">Last 30 days</p>
               <Sparkline history={data.history} />
