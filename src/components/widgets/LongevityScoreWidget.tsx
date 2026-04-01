@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { fetchJson } from '@/lib/safe-fetch'
 
 interface ScoreComponent {
   label: string
@@ -102,14 +103,10 @@ export default function LongevityScoreWidget({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch(`/api/twin/${userId}/longevity-score/history?days=30`, {
-      credentials: 'include',
-    })
-      .then((r) => (r.ok ? r.json() : null))
+    fetchJson<LongevityScoreData>(`/api/twin/${userId}/longevity-score/history?days=30`)
       .then((d) => {
         if (d) setData(d)
       })
-      .catch(() => {})
       .finally(() => setLoading(false))
   }, [userId])
 

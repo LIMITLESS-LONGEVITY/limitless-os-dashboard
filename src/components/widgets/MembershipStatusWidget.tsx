@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { fetchJson } from '@/lib/safe-fetch'
 
 interface Membership {
   planName: string
@@ -35,10 +36,8 @@ export default function MembershipStatusWidget() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/book/api/me/membership', { credentials: 'include' })
-      .then((r) => (r.ok ? r.json() : null))
+    fetchJson<{ membership?: Membership }>('/book/api/me/membership')
       .then((d) => { if (d?.membership) setData(d.membership) })
-      .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
 

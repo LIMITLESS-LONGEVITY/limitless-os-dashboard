@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { fetchJson } from '@/lib/safe-fetch'
 
 interface Enrollment {
   id: string
@@ -28,10 +29,8 @@ export default function LearningProgressWidget() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/learn/api/me/enrollments', { credentials: 'include' })
-      .then((r) => (r.ok ? r.json() : null))
+    fetchJson<{ enrollments?: Enrollment[] }>('/learn/api/me/enrollments')
       .then((d) => { if (d?.enrollments) setEnrollments(d.enrollments) })
-      .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { fetchJson } from '@/lib/safe-fetch'
 
 interface Device {
   id: string
@@ -35,27 +36,21 @@ export default function WearableConnectWidget({ userId }: { userId: string }) {
   const [connecting, setConnecting] = useState(false)
 
   useEffect(() => {
-    fetch(`/api/twin/${userId}/wearable-devices`, { credentials: 'include' })
-      .then((r) => (r.ok ? r.json() : null))
+    fetchJson<{ devices?: Device[] }>(`/api/twin/${userId}/wearable-devices`)
       .then((d) => { if (d?.devices) setDevices(d.devices.filter((dev: Device) => dev.isActive)) })
-      .catch(() => {})
       .finally(() => setLoading(false))
   }, [userId])
 
   const handleConnect = async () => {
     setConnecting(true)
-    try {
-      const res = await fetch(`/api/twin/${userId}/wearable-devices/connect`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ provider: 'oura' }),
-      })
-      const data = await res.json()
-      if (data.authUrl) {
-        window.location.href = data.authUrl
-      }
-    } catch {
+    const data = await fetchJson<{ authUrl?: string }>(`/api/twin/${userId}/wearable-devices/connect`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider: 'oura' }),
+    })
+    if (data?.authUrl) {
+      window.location.href = data.authUrl
+    } else {
       setConnecting(false)
     }
   }

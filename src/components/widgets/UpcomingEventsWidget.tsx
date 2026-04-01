@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { fetchJson } from '@/lib/safe-fetch'
 
 interface Appointment {
   id: string
@@ -24,10 +25,8 @@ export default function UpcomingEventsWidget() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/book/api/me/appointments', { credentials: 'include' })
-      .then((r) => (r.ok ? r.json() : null))
+    fetchJson<{ appointments?: Appointment[] }>('/book/api/me/appointments')
       .then((d) => { if (d?.appointments) setAppointments(d.appointments.slice(0, 3)) })
-      .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
 

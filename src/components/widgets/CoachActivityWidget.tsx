@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { fetchJson } from '@/lib/safe-fetch'
 
 interface CoachStats {
   exercisesCreatedThisWeek: number
@@ -64,20 +65,14 @@ export default function CoachActivityWidget({ userId }: { userId: string }) {
   const [isCoach, setIsCoach] = useState(true)
 
   useEffect(() => {
-    fetch('/train/api/v1/me/coach/activity', { credentials: 'include' })
-      .then((r) => {
-        if (r.status === 401) {
-          setIsCoach(false)
-          return null
-        }
-        const ct = r.headers.get('content-type') || ''
-        if (!ct.includes('application/json')) return null
-        return r.ok ? r.json() : null
-      })
+    fetchJson<CoachActivityData>('/train/api/v1/me/coach/activity')
       .then((d) => {
-        if (d) setData(d)
+        if (d) {
+          setData(d)
+        } else {
+          setIsCoach(false)
+        }
       })
-      .catch(() => {})
       .finally(() => setLoading(false))
   }, [userId])
 

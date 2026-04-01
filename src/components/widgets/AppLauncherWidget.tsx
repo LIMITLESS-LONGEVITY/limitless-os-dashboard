@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { fetchJson } from '@/lib/safe-fetch'
 
 interface AppCard {
   name: string
@@ -34,32 +35,27 @@ export default function AppLauncherWidget({ userId }: { userId: string }) {
     let done = 0
     const check = () => { if (++done >= 3) setLoading(false) }
 
-    fetch('/learn/api/me/enrollments', { credentials: 'include' })
-      .then((r) => (r.ok ? r.json() : null))
+    fetchJson<{ enrollments?: { progress: number }[] }>('/learn/api/me/enrollments')
       .then((d) => {
         if (d?.enrollments) {
-          const active = d.enrollments.filter((e: { progress: number }) => e.progress < 1).length
+          const active = d.enrollments.filter((e) => e.progress < 1).length
           setLearnCount(active)
         }
       })
-      .catch(() => {})
       .finally(check)
 
-    fetch('/book/api/me/appointments', { credentials: 'include' })
-      .then((r) => (r.ok ? r.json() : null))
+    fetchJson<{ appointments?: { date: string }[] }>('/book/api/me/appointments')
       .then((d) => {
         if (d?.appointments) {
           const upcoming = d.appointments.filter(
-            (a: { date: string }) => new Date(a.date) > new Date(),
+            (a) => new Date(a.date) > new Date(),
           ).length
           setBookCount(upcoming)
         }
       })
-      .catch(() => {})
       .finally(check)
 
-    fetch(`/api/twin/${userId}/summary`, { credentials: 'include' })
-      .then((r) => (r.ok ? r.json() : null))
+    fetchJson<{ lastUpdated?: string }>(`/api/twin/${userId}/summary`)
       .then((d) => {
         if (d?.lastUpdated) {
           const days = Math.floor(
@@ -70,7 +66,6 @@ export default function AppLauncherWidget({ userId }: { userId: string }) {
           setHealthLabel('No data')
         }
       })
-      .catch(() => setHealthLabel('No data'))
       .finally(check)
   }, [userId])
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { fetchJson } from '@/lib/safe-fetch'
 
 interface ActiveProgram {
   id: string
@@ -82,16 +83,10 @@ export default function ActiveProgramsWidget({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/train/api/v1/me/programs/active', { credentials: 'include' })
-      .then((r) => {
-        const ct = r.headers.get('content-type') || ''
-        if (!ct.includes('application/json')) return []
-        return r.ok ? r.json() : []
-      })
+    fetchJson<ActiveProgram[]>('/train/api/v1/me/programs/active')
       .then((d) => {
         if (Array.isArray(d)) setPrograms(d)
       })
-      .catch(() => {})
       .finally(() => setLoading(false))
   }, [userId])
 

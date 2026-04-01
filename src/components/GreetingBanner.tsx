@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { fetchJson } from '@/lib/safe-fetch'
 
 interface GreetingProps {
   firstName?: string
@@ -117,38 +118,25 @@ export default function GreetingBanner({ firstName, email, userId, tier }: Greet
   useEffect(() => {
     const fetchContext = async () => {
       try {
-        const [healthRes, enrollRes, scoreRes] = await Promise.allSettled([
-          fetch(`/api/twin/${userId}/summary`, { credentials: 'include' }),
-          fetch('/learn/api/me/enrollments', { credentials: 'include' }),
-          fetch(`/api/twin/${userId}/longevity-score/history?days=7`, { credentials: 'include' }),
+        const [healthData, enrollData, scoreData] = await Promise.all([
+          fetchJson<HealthSummary>(`/api/twin/${userId}/summary`),
+          fetchJson<{ enrollments?: Enrollment[]; docs?: Enrollment[] }>('/learn/api/me/enrollments'),
+          fetchJson<LongevityScore>(`/api/twin/${userId}/longevity-score/history?days=7`),
         ])
 
-        if (healthRes.status === 'fulfilled' && healthRes.value.ok) {
-          setHealth(await healthRes.value.json())
-        }
-
-        if (enrollRes.status === 'fulfilled' && enrollRes.value.ok) {
-          const data = await enrollRes.value.json()
-          setEnrollments(data.enrollments || data.docs || [])
-        }
-
-        if (scoreRes.status === 'fulfilled' && scoreRes.value.ok) {
-          setScore(await scoreRes.value.json())
-        }
-      } catch {
-        // Graceful degradation — greeting still works without context
+        if (healthData) setHealth(healthData)
+        if (enrollData) setEnrollments(enrollData.enrollments || enrollData.docs || [])
+        if (scoreData) setScore(scoreData)
       } finally {
         setLoaded(true)
       }
     }
 
     // Fetch streak from user data
-    fetch('/learn/api/users/me', { credentials: 'include' })
-      .then((r) => (r.ok ? r.json() : null))
+    fetchJson<{ user?: { currentStreak?: number } }>('/learn/api/users/me')
       .then((data) => {
         if (data?.user?.currentStreak) setStreak(data.user.currentStreak)
       })
-      .catch(() => {})
 
     fetchContext()
   }, [userId])

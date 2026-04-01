@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { fetchJson } from '@/lib/safe-fetch'
 
 interface ActivityEvent {
   id: string
@@ -60,10 +61,8 @@ export default function ActivityFeedWidget({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch(`/api/twin/${userId}/activity?limit=10`, { credentials: 'include' })
-      .then((r) => (r.ok ? r.json() : null))
+    fetchJson<{ events?: ActivityEvent[] }>(`/api/twin/${userId}/activity?limit=10`)
       .then((d) => { if (d?.events) setEvents(d.events) })
-      .catch(() => {})
       .finally(() => setLoading(false))
   }, [userId])
 

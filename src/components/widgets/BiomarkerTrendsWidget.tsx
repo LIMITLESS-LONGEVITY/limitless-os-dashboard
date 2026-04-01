@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { fetchJson } from '@/lib/safe-fetch'
 
 interface Biomarker {
   name: string
@@ -79,12 +80,10 @@ export default function BiomarkerTrendsWidget({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch(`/api/twin/${userId}/biomarkers?limit=50`, { credentials: 'include' })
-      .then((r) => (r.ok ? r.json() : null))
+    fetchJson<{ biomarkers?: Biomarker[] }>(`/api/twin/${userId}/biomarkers?limit=50`)
       .then((d) => {
         if (d?.biomarkers) setData(groupBiomarkers(d.biomarkers))
       })
-      .catch(() => {})
       .finally(() => setLoading(false))
   }, [userId])
 
