@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { fetchJson } from '@/lib/safe-fetch'
 
 interface CubesSummary {
   exerciseCount: number
@@ -14,16 +15,10 @@ export default function CubesAppCard({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/train/api/v1/me/summary', { credentials: 'include' })
-      .then((r) => {
-        const ct = r.headers.get('content-type') || ''
-        if (!ct.includes('application/json')) return null
-        return r.ok ? r.json() : null
-      })
+    fetchJson<CubesSummary>('/train/api/v1/me/summary')
       .then((d) => {
         if (d) setData(d)
       })
-      .catch(() => {})
       .finally(() => setLoading(false))
   }, [userId])
 

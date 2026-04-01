@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { fetchJson } from '@/lib/safe-fetch'
 
 interface ProtocolItem {
   id: string
@@ -24,10 +25,8 @@ export default function DailyProtocolWidget() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/learn/api/me/protocol', { credentials: 'include' })
-      .then((r) => (r.ok ? r.json() : null))
+    fetchJson<{ items?: ProtocolItem[] }>('/learn/api/me/protocol')
       .then((d) => { if (d?.items) setItems(d.items) })
-      .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
 

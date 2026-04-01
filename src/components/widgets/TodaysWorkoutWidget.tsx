@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { fetchJson } from '@/lib/safe-fetch'
 
 interface WorkoutExercise {
   id: string
@@ -53,23 +54,12 @@ function ReadinessIndicator({ score }: { score: number }) {
 export default function TodaysWorkoutWidget({ userId }: { userId: string }) {
   const [data, setData] = useState<TodaysWorkoutData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
 
   useEffect(() => {
-    fetch('/train/api/v1/me/today', { credentials: 'include' })
-      .then((r) => {
-        if (r.status === 401) {
-          setError(true)
-          return null
-        }
-        const ct = r.headers.get('content-type') || ''
-        if (!ct.includes('application/json')) return null
-        return r.ok ? r.json() : null
-      })
+    fetchJson<TodaysWorkoutData>('/train/api/v1/me/today')
       .then((d) => {
         if (d) setData(d)
       })
-      .catch(() => setError(true))
       .finally(() => setLoading(false))
   }, [userId])
 
@@ -84,32 +74,6 @@ export default function TodaysWorkoutWidget({ userId }: { userId: string }) {
 
       {loading ? (
         <WidgetSkeleton />
-      ) : error ? (
-        <div className="flex flex-col items-center justify-center py-8 text-center">
-          <svg
-            className="w-10 h-10 text-brand-silver/30 mb-3"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={1.5}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-            />
-          </svg>
-          <p className="text-brand-silver/50 text-sm max-w-[220px]">
-            Connect to Cubes+ to see your training
-          </p>
-          <a
-            href="/train"
-            className="mt-2 text-sm font-medium hover:underline"
-            style={{ color: '#e11d48' }}
-          >
-            Get Started
-          </a>
-        </div>
       ) : !data ? (
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <svg

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { fetchJson } from '@/lib/safe-fetch'
 
 interface HealthSummary {
   biologicalAge: number
@@ -33,10 +34,8 @@ export default function HealthWidget({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch(`/api/twin/${userId}/summary`, { credentials: 'include' })
-      .then((r) => (r.ok ? r.json() : null))
+    fetchJson<HealthSummary>(`/api/twin/${userId}/summary`)
       .then((d) => { if (d) setData(d) })
-      .catch(() => {})
       .finally(() => setLoading(false))
   }, [userId])
 
