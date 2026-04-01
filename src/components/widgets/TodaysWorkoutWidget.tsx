@@ -62,6 +62,8 @@ export default function TodaysWorkoutWidget({ userId }: { userId: string }) {
           setError(true)
           return null
         }
+        const ct = r.headers.get('content-type') || ''
+        if (!ct.includes('application/json')) return null
         return r.ok ? r.json() : null
       })
       .then((d) => {
