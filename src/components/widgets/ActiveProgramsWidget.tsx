@@ -83,7 +83,11 @@ export default function ActiveProgramsWidget({ userId }: { userId: string }) {
 
   useEffect(() => {
     fetch('/train/api/v1/me/programs/active', { credentials: 'include' })
-      .then((r) => (r.ok ? r.json() : []))
+      .then((r) => {
+        const ct = r.headers.get('content-type') || ''
+        if (!ct.includes('application/json')) return []
+        return r.ok ? r.json() : []
+      })
       .then((d) => {
         if (Array.isArray(d)) setPrograms(d)
       })
