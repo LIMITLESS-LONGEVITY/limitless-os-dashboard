@@ -124,9 +124,9 @@ export default function GreetingBanner({ firstName, email, userId, tier }: Greet
           fetchJson<LongevityScore>(`/api/twin/${userId}/longevity-score/history?days=7`),
         ])
 
-        if (healthData) setHealth(healthData)
-        if (enrollData) setEnrollments(enrollData.enrollments || enrollData.docs || [])
-        if (scoreData) setScore(scoreData)
+        if (healthData?.biologicalAge != null) setHealth(healthData)
+        if (enrollData?.enrollments || enrollData?.docs) setEnrollments(enrollData.enrollments || enrollData.docs || [])
+        if (scoreData && typeof scoreData.currentScore === 'number') setScore(scoreData)
       } finally {
         setLoaded(true)
       }

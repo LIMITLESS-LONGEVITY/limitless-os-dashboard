@@ -17,7 +17,7 @@ export default function CubesAppCard({ userId }: { userId: string }) {
   useEffect(() => {
     fetchJson<CubesSummary>('/train/api/v1/me/summary')
       .then((d) => {
-        if (d) setData(d)
+        if (d && typeof d.exerciseCount === 'number') setData(d)
       })
       .finally(() => setLoading(false))
   }, [userId])

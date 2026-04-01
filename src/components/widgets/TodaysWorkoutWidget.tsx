@@ -58,7 +58,7 @@ export default function TodaysWorkoutWidget({ userId }: { userId: string }) {
   useEffect(() => {
     fetchJson<TodaysWorkoutData>('/train/api/v1/me/today')
       .then((d) => {
-        if (d) setData(d)
+        if (d && d.id && d.name && Array.isArray(d.exercises)) setData(d)
       })
       .finally(() => setLoading(false))
   }, [userId])
